@@ -1,9 +1,10 @@
 import { StyleSheet } from "react-native";
+import * as colors from '../utils/colors'
 
 export default StyleSheet.create({
     mainContainer:{
         flex:1,
-        backgroundColor:'#036ffc'
+        backgroundColor: colors.blue
     },
     header:{
         height:'5%',
@@ -16,14 +17,14 @@ export default StyleSheet.create({
     },
     headerText:{
         fontSize:18,
-        color:'#fff'
+        color: colors.white
         // fontWeight:'bold',
     },
     mainText:{
         position:'absolute',
         alignSelf:'center',
         marginTop:'50%',
-        color:'#fff',
+        color: colors.white,
         fontWeight:'bold',
         fontSize:30
     },
@@ -41,6 +42,6 @@ export default StyleSheet.create({
         alignItems:'center',
         justifyContent:'center',
         borderRadius:35,
-        borderColor:"#fff",
+        borderColor: colors.white,
     }
 })

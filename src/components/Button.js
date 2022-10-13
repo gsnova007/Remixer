@@ -5,14 +5,25 @@ import styles from '../stylesheets';
 import {
     PanGestureHandler,
 } from 'react-native-gesture-handler';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import * as color from '../utils/colors'
+import { downloadFile, fileExist } from '../helperFunctions/downloader';
+import { panHandlerName } from 'react-native-gesture-handler/lib/typescript/handlers/PanGestureHandler';
+import { playSound } from './SoundController';
 
 export default function Button({name}) {
     // var translateY = new Animated.Value(0)
     // const handleGesture = Animated.event([{nativeEvent: {absoluteY: translateY}}], 
     // { useNativeDriver: true });
     const [borderd, setBorderd] = useState(true)
+    const [exist, setExist] = useState(false)
+    const [progress, setProgress] = useState(0)
+    const [downloading, setDownloading] = useState(false)
     const move = useRef(new Animated.Value(0)).current
     const comparion = borderd == false;
+    useEffect(()=>{
+        fileExist(name,setExist)
+    },[])
 
     const togglePosition = () => {
         Animated.spring(
@@ -51,19 +62,29 @@ export default function Button({name}) {
         //         }]}}
         //     >
         <TouchableOpacity onPressIn={()=>{
-            setBorderd(!borderd)
-            togglePosition()
+            !exist ? downloadFile('any',name,setProgress,setExist,setDownloading) 
+                : [setBorderd(!borderd),togglePosition(),playSound(name)];
+            console.log("Hello")
         }}>
             <Animated.View
             style={{
                 ...styles.button,
-                backgroundColor: comparion ? '#fff' : 'transparent',
-                borderWidth: comparion ? 0 : 3,
+                backgroundColor: comparion ? color.white : 'transparent',
+                borderWidth: comparion || downloading ? 0 : 3,
                 transform: [{
                     translateY: move
                 }]
             }}>
-            <MCI name={name} size={50} color={comparion ? '#036ffc' : 'white'} />
+                { downloading ? <View style={{position:'absolute',zIndex:100}}>
+                    <AnimatedCircularProgress
+                        size={70}
+                        width={3}
+                        fill={progress}
+                        tintColor={color.white}
+                        onAnimationComplete={() => console.log('onAnimationComplete')}
+                        backgroundColor={progress != 0 ? color.blue : "transparent"} />
+                </View> : null}
+            <MCI name={name} size={50} color={comparion ? color.blue : color.white} />
             </Animated.View>
          </TouchableOpacity>
         // </Animated.View>
