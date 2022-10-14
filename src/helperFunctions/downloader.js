@@ -1,6 +1,28 @@
+import { PermissionsAndroid } from "react-native";
 import RNFetchBlob from "react-native-blob-util";
 
-export function downloadFile(url,fileName,setProgress,setExist,setDownloading) {
+export const requestToPermissions = async (fileName,setProgress,setExist,setDownloading) => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Music',
+          message:
+            'App needs access to your Files... ',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        downloadFile(fileName, setProgress, setExist, setDownloading)
+      }
+    } catch (err) {
+    //   console.log(err);
+    }
+  };
+
+export function downloadFile(fileName,setProgress,setExist,setDownloading) {
     const { config, fs } = RNFetchBlob;
     const downloads = fs.dirs.DownloadDir;
     setDownloading(true)
@@ -28,14 +50,6 @@ export function downloadFile(url,fileName,setProgress,setExist,setDownloading) {
                 setDownloading(false)
             },1500)
             console.log(`sound file`, res.path())
-            // try {
-            //     // play the file tone.mp3
-            //     // SoundPlayer.playSoundFile('tone', 'mp3')
-            //     // or play from url
-            //     SoundPlayer.playUrl('https://freesound.org/people/NoiseCollector/sounds/75440/download/75440__noisecollector__washington-castlebirds.mp3')
-            // } catch (e) {
-            //     console.log(`cannot play the sound file`, e)
-            // }
         }
     );
 }

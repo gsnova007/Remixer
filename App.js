@@ -4,14 +4,8 @@ import HomeScreen from './src/screens/Dashboard'
 import {
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
-var Sound = require('react-native-sound');
-
-
 
 export default function App() {
-  useEffect(() => {
-    Sound.setCategory('Playback');
-  }, [])
   
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
